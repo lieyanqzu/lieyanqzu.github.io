@@ -1,0 +1,11 @@
+.DS_Store
+Thumbs.db
+db.json
+*.log
+# node_modules/
+public/
+.deploy*/
+*.sh
+source/images/*
+!source/images/avatar.jpg
+!source/images/favicon.ico
