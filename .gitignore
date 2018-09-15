@@ -9,3 +9,4 @@ public/
 source/images/*
 !source/images/avatar.jpg
 !source/images/favicon.ico
+themes/next/.git*
