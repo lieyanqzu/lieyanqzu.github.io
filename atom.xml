@@ -5,9 +5,9 @@
   <subtitle>code &amp; life</subtitle>
   <link href="/atom.xml" rel="self"/>
   
-  <link href="http://yoursite.com/"/>
+  <link href="https://lieyanqzu.github.io/"/>
   <updated>2018-09-15T15:03:48.405Z</updated>
-  <id>http://yoursite.com/</id>
+  <id>https://lieyanqzu.github.io/</id>
   
   <author>
     <name>Dark Flame</name>
@@ -18,8 +18,8 @@
   
   <entry>
     <title>Java的Class类</title>
-    <link href="http://yoursite.com/blog/2017-11/java-class/"/>
-    <id>http://yoursite.com/blog/2017-11/java-class/</id>
+    <link href="https://lieyanqzu.github.io/blog/2017-11/java-class/"/>
+    <id>https://lieyanqzu.github.io/blog/2017-11/java-class/</id>
     <published>2017-11-09T13:35:30.000Z</published>
     <updated>2018-09-15T15:03:48.405Z</updated>
     
@@ -34,12 +34,12 @@
     
     </summary>
     
-      <category term="Java" scheme="http://yoursite.com/categories/Java/"/>
+      <category term="Java" scheme="https://lieyanqzu.github.io/categories/Java/"/>
     
     
-      <category term="Java" scheme="http://yoursite.com/tags/Java/"/>
+      <category term="Java" scheme="https://lieyanqzu.github.io/tags/Java/"/>
     
-      <category term="Class" scheme="http://yoursite.com/tags/Class/"/>
+      <category term="Class" scheme="https://lieyanqzu.github.io/tags/Class/"/>
     
   </entry>
   
