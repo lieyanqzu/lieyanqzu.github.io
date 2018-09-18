@@ -1,0 +1,335 @@
+<!DOCTYPE html><html class="theme-next gemini use-motion" lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=2"><meta name="theme-color" content="#222"><script src="/lib/pace/pace.min.js?v=1.0.2"></script><link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet"><link rel="stylesheet" media="all" href="/lib/Han/dist/han.min.css?v=3.3"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"><link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic|PingFang SC:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|consolas:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css"><link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css"><link href="/css/main.css?v=6.4.1" rel="stylesheet" type="text/css"><link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=6.4.1"><link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=6.4.1"><script type="text/javascript" id="hexo.configurations">var NexT=window.NexT||{},CONFIG={root:"/",scheme:"Gemini",version:"6.4.1",sidebar:{position:"left",display:"post",offset:12,b2t:!1,scrollpercent:!0,onmobile:!1},fancybox:!0,fastclick:!0,lazyload:!0,tabs:!0,motion:{enable:!0,async:!0,transition:{post_block:"fadeIn",post_header:"slideDownIn",post_body:"slideDownIn",coll_header:"slideLeftIn",sidebar:"slideUpIn"}},algolia:{applicationID:"",apiKey:"",indexName:"",hits:{per_page:10},labels:{input_placeholder:"Search for Posts",hits_empty:"We didn't find any results for the search: ${query}",hits_stats:"${hits} results found in ${time} ms"}}}</script><meta name="description" content="ctypes是什么 ctypes is a foreign function library for Python. It provides C compatible data types, and allows calling functions in DLLs or shared libraries. It can be used to wrap these libraries in pure"><meta name="keywords" content="Python,C&#x2F;C++,ctypes"><meta property="og:type" content="article"><meta property="og:title" content="在Python中使用C&#x2F;C++——ctypes(1)"><meta property="og:url" content="https://lieyanqzu.github.io/blog/2018-09/python-ctypes-1/index.html"><meta property="og:site_name" content="lieyanqzu&#39;s Blog"><meta property="og:description" content="ctypes是什么 ctypes is a foreign function library for Python. It provides C compatible data types, and allows calling functions in DLLs or shared libraries. It can be used to wrap these libraries in pure"><meta property="og:locale" content="zh-CN"><meta property="og:updated_time" content="2018-09-18T04:29:51.974Z"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="在Python中使用C&#x2F;C++——ctypes(1)"><meta name="twitter:description" content="ctypes是什么 ctypes is a foreign function library for Python. It provides C compatible data types, and allows calling functions in DLLs or shared libraries. It can be used to wrap these libraries in pure"><link rel="alternate" href="/atom.xml" title="lieyanqzu's Blog" type="application/atom+xml"><link rel="canonical" href="https://lieyanqzu.github.io/blog/2018-09/python-ctypes-1/"><script type="text/javascript" id="page.configurations">CONFIG.page={sidebar:""}</script><title>在Python中使用C/C++——ctypes(1) | lieyanqzu's Blog</title><noscript><style type="text/css">.sidebar-inner,.use-motion .brand,.use-motion .collection-title,.use-motion .comments,.use-motion .menu-item,.use-motion .motion-element,.use-motion .pagination,.use-motion .post-block,.use-motion .post-body,.use-motion .post-header{opacity:initial}.use-motion .logo,.use-motion .site-subtitle,.use-motion .site-title{opacity:initial;top:initial}.logo-line-after i{right:initial}</style></noscript></head><body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN"><div class="container sidebar-position-left page-post-detail"><div class="headband"></div><header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="header-inner"><div class="site-brand-wrapper"><div class="site-meta"><div class="custom-logo-site-title"><a href="/" class="brand" rel="start"><span class="logo-line-before"><i></i></span> <span class="site-title">lieyanqzu's Blog</span><span class="logo-line-after"><i></i></span></a></div><h1 class="site-subtitle" itemprop="description">code & life</h1></div><div class="site-nav-toggle"> <button aria-label="切换导航栏"><span class="btn-bar"></span><span class="btn-bar"></span><span class="btn-bar"></span></button></div></div><nav class="site-nav"><ul id="menu" class="menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i><br>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i><br>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i><br>标签<span class="badge">5</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i><br>分类<span class="badge">2</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i><br>归档<span class="badge">2</span></a></li><li class="menu-item menu-item-search"><a href="javascript:;" class="popup-trigger"><i class="menu-item-icon fa fa-search fa-fw"></i><br>搜索</a></li></ul><div class="site-search"><div class="popup search-popup local-search-popup"><div class="local-search-header clearfix"><span class="search-icon"><i class="fa fa-search"></i></span><span class="popup-btn-close"><i class="fa fa-times-circle"></i></span><div class="local-search-input-wrapper"> <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input"></div></div><div id="local-search-result"></div></div></div></nav></div></header><main id="main" class="main"><div class="main-inner"><div class="content-wrap"><div id="content" class="content"><div id="posts" class="posts-expand"><article class="post post-type-normal" itemscope itemtype="http://schema.org/Article"><div class="post-block"><link itemprop="mainEntityOfPage" href="https://lieyanqzu.github.io/blog/2018-09/python-ctypes-1/"><span hidden itemprop="author" itemscope itemtype="http://schema.org/Person"><meta itemprop="name" content="Dark Flame"><meta itemprop="description" content="Note of my programming journey."><meta itemprop="image" content="/images/avatar.jpg"></span><span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization"><meta itemprop="name" content="lieyanqzu's Blog"></span><header class="post-header"><h2 class="post-title" itemprop="name headline">在Python中使用C/C++——ctypes(1)</h2><div class="post-meta"><span class="post-time"><span class="post-meta-item-icon"><i class="fa fa-calendar-o"></i></span> <span class="post-meta-item-text">发表于</span> <time title="创建时间：2018-09-02 19:04:16" itemprop="dateCreated datePublished" datetime="2018-09-02T19:04:16+08:00">2018-09-02</time></span> <span class="post-category"><span class="post-meta-divider">|</span><span class="post-meta-item-icon"><i class="fa fa-folder-o"></i></span> <span class="post-meta-item-text">分类于</span> <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span></span> <span class="post-comments-count"><span class="post-meta-divider">|</span><span class="post-meta-item-icon"><i class="fa fa-comment-o"></i></span> <a href="/blog/2018-09/python-ctypes-1/#comments" itemprop="discussionUrl"><span class="post-meta-item-text">评论数：</span><span class="post-comments-count valine-comment-count" data-xid="/blog/2018-09/python-ctypes-1/" itemprop="commentCount"></span></a></span> <span id="/blog/2018-09/python-ctypes-1/" class="leancloud_visitors" data-flag-title="在Python中使用C/C++——ctypes(1)"><span class="post-meta-divider">|</span><span class="post-meta-item-icon"><i class="fa fa-eye"></i></span> <span class="post-meta-item-text">阅读次数：</span><span class="leancloud-visitors-count"></span></span></div></header><div class="post-body han-init-context" itemprop="articleBody"><h1 id="ctypes是什么"><a href="#ctypes是什么" class="headerlink" title="ctypes是什么"></a>ctypes是什么</h1><blockquote><p>ctypes is a foreign function library for Python. It provides C compatible data types, and allows calling functions in DLLs or shared libraries. It can be used to wrap these libraries in pure Python.</p></blockquote><p>简单来说，<code>ctypes</code>是一个让开发者在Python中调用C/C++动态链接库的外部函数库，和JNI一样，一般有三种场景需要我们在Python中使用C/C++编写的库：<a id="more"></a></p><ol><li>有大量现存的库或SDK是用C/C++编写的，如果想要在Python中使用其功能，就不得不使用<code>ctypes</code>这样的库来进行调用</li><li>需要与Python标准库还没有Wrap的操作系统API交互或者进行一些底层操作，比如内存分配（当然也可以直接使用C编写扩展模块，但是<code>ctypes</code>的使用更加简单）</li><li>Python的执行效率很低，在进行计算密集型的任务时，可以使用C/C++来提高执行效率（使用PyPy、numba这样的JIT编译器来提高运行效率也是一种选择）</li></ol><h1 id="准备C-C-动态链接库"><a href="#准备C-C-动态链接库" class="headerlink" title="准备C/C++动态链接库"></a>准备C/C++动态链接库</h1><p>既然要在Python中使用动态链接库，首先就来看一下如何编写并编译一个，使用的环境为macOS 10.13，编译器版本为Apple LLVM version 9.1.0。</p><h2 id="extern-quot-C-quot"><a href="#extern-quot-C-quot" class="headerlink" title="extern &quot;C&quot;"></a><code>extern &quot;C&quot;</code></h2><p>如果是使用C++的话，需要将头文件的函数声明包含在<code>extern &quot;C&quot;</code>中，这个声明在编写C++库的时候非常常用，因为C++编写的库很有可能被C程序使用，而在C++中有着函数重载这一特性，所以编译后的文件中函数名将会加上参数类型列表，这个不同将导致C语言和C++无法互相调用函数。</p><p><code>extern &quot;C&quot;</code>包含<code>extern</code>和<code>&quot;C&quot;</code>两部分。<code>extern</code>是C/C++中的关键字，表示被标记的变量或方法可以在外部模块被使用，<code>&quot;C&quot;</code>告诉编译器使用C-linkage进行编译声明了<code>extern &quot;C&quot;</code>的代码。一般会使用以下的头文件模板：<br></p><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// cpp_header.h</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> __CPP_HEADER_H__</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> __CPP_HEADER_H__</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> __cplusplus</span></span><br><span class="line"><span class="keyword">extern</span> <span class="string">"C"</span> &#123;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"><span class="comment">// your cpp code here</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> __cplusplus</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br></pre></td></tr></table></figure><p></p><h2 id="cdecl和-stdcall"><a href="#cdecl和-stdcall" class="headerlink" title="__cdecl和__stdcall"></a><code>__cdecl</code>和<code>__stdcall</code></h2><p><code>__cdecl</code>是C/C++默认的调用约定，<code>__stdcall</code>调用约定一般用于调用Win32 API，这两个函数的参数压栈顺序是相同的（从右往左）。两者最重要的不同点在于清理堆栈，<code>__cdecl</code>为调用者负责清理堆栈，<code>__stdcall</code>为被调用者清理堆栈。之所以提到这两种不同的调用约定，是因为在<code>ctypes</code>中对于这两者需要CDLL和WinDLL两种不同的调用方法来加载库。</p><h2 id="如何编译库"><a href="#如何编译库" class="headerlink" title="如何编译库"></a>如何编译库</h2><p>大部分IDE都可以新建一个库项目，在编写完成代码后编译即可得到一个库文件。也可以直接使用编译器编译生成库文件，对于*nix操作系统的用户，可以使用gcc或者clang等编译器（Windows用户则为MinGW或VC等编译器），使用以下的命令即可编译生成一个库文件。<br></p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -shared -fPIC -o libtest.so test.c</span><br></pre></td></tr></table></figure><p></p><p><code>-fPIC</code>表示编译将生成位置无关代码，这表示使用编译出的代码访问常量时将使用GOT（global offset table,全局偏移表）得到地址。<code>-shared</code>表示编译生成的对象可以被其他可执行程序共享，一般使用时需要同时加上-fPIC。</p><h1 id="开始使用ctypes"><a href="#开始使用ctypes" class="headerlink" title="开始使用ctypes"></a>开始使用ctypes</h1><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// test.c</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">hello</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Hello, world!"</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>首先写一个经典的HelloWorld代码，将以上代码编译为动态链接库，我们将在Python中尝试使用这个hello()函数。<br></p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># python版本2.5+都有ctypes模块</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> ctypes <span class="keyword">import</span> * <span class="comment"># 导入ctypes模块</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>CDLL(<span class="string">"libtest.so"</span>).hello() <span class="comment"># 直接使用函数名调用函数</span></span><br><span class="line">Hello, world!</span><br><span class="line"><span class="number">0</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>lib = cdll.LoadLibrary(<span class="string">'libtest.so'</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>lib.hello()</span><br><span class="line">Hello, world!</span><br><span class="line"><span class="number">0</span> <span class="comment"># 返回值</span></span><br></pre></td></tr></table></figure><p></p><p>使用<code>CDLL(&quot;libxxx.so&quot;)</code>或<code>cdll.LoadLibrary(&quot;libxxx.so&quot;)</code>都可以加载动态链接库。Windows加载dll动态链接库（如test.dll）为<code>windll.test</code>或<code>cdll.test</code>，可以省略.dll后缀名。这里的windll用于调用上文提到的<code>__stdcall</code>调用约定，cdll则为标准的<code>__cdecl</code>调用约定。</p><h2 id="基本数据类型"><a href="#基本数据类型" class="headerlink" title="基本数据类型"></a>基本数据类型</h2><table><thead><tr><th>ctypes type</th><th>C type</th><th>Python type</th></tr></thead><tbody><tr><td>c_bool</td><td>_Bool</td><td>bool (1)</td></tr><tr><td>c_char</td><td>char</td><td>1-character string</td></tr><tr><td>c_wchar</td><td>wchar_t</td><td>1-character unicode string</td></tr><tr><td>c_byte</td><td>char</td><td>int/long</td></tr><tr><td>c_ubyte</td><td>unsigned char</td><td>int/long</td></tr><tr><td>c_short</td><td>short</td><td>int/long</td></tr><tr><td>c_ushort</td><td>unsigned short</td><td>int/long</td></tr><tr><td>c_int</td><td>int</td><td>int/long</td></tr><tr><td>c_uint</td><td>unsigned int</td><td>int/long</td></tr><tr><td>c_long</td><td>long</td><td>int/long</td></tr><tr><td>c_ulong</td><td>unsigned long</td><td>int/long</td></tr><tr><td>c_longlong</td><td>__int64 or long long</td><td>int/long</td></tr><tr><td>c_ulonglong</td><td>unsigned __int64 or unsigned long long</td><td>int/long</td></tr><tr><td>c_float</td><td>float</td><td>float</td></tr><tr><td>c_double</td><td>double</td><td>float</td></tr><tr><td>c_longdouble</td><td>long double</td><td>float</td></tr><tr><td>c_char_p</td><td>char * (NUL terminated)</td><td>string or None</td></tr><tr><td>c_wchar_p</td><td>wchar_t * (NUL terminated)</td><td>unicode or None</td></tr><tr><td>c_void_p</td><td>void *</td><td>int/long or None</td></tr></tbody></table><p>注：在32位系统，c_int是c_long的别名</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>c_int(<span class="number">123</span>) <span class="comment"># 直接使用构造函数创建</span></span><br><span class="line">c_int(<span class="number">123</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>c_double(<span class="number">6.66</span>)</span><br><span class="line">c_double(<span class="number">6.66</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>ui = c_uint(<span class="number">-1</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>ui</span><br><span class="line">c_uint(<span class="number">4294967295L</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>ui.value = <span class="number">1</span> <span class="comment"># 值可以修改</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>ui</span><br><span class="line">c_uint(<span class="number">1L</span>)</span><br></pre></td></tr></table></figure><p><code>c_char_p</code>、<code>c_wchar_p</code>、<code>c_void_p</code>修改值的时候将会修改指向的地址，而指向的内存块是不可变的，这和Python字符串不可变相同。如果需要使用可变内存块，应该使用<code>create_string_buffer()</code>或<code>create_unicode_buffer()</code>（用于wchart）。</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>p = create_string_buffer(<span class="string">'Hello'</span>,<span class="number">10</span>) <span class="comment"># 10字节的字符串</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>repr(p.raw)</span><br><span class="line"><span class="string">"'Hello\\x00\\x00\\x00\\x00\\x00'"</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>p.raw = <span class="string">'Hi'</span> <span class="comment"># 不会自动加上'\0'</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>repr(p.raw)</span><br><span class="line"><span class="string">"'Hillo\\x00\\x00\\x00\\x00\\x00'"</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>p.value = <span class="string">'Hi'</span> <span class="comment"># 会自动加上'\0'</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>repr(p.raw)</span><br><span class="line"><span class="string">"'Hi\\x00lo\\x00\\x00\\x00\\x00\\x00'"</span></span><br></pre></td></tr></table></figure><h2 id="函数调用"><a href="#函数调用" class="headerlink" title="函数调用"></a>函数调用</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> ctypes <span class="keyword">import</span> *</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>libc = CDLL(<span class="string">'libc.dylib'</span>) <span class="comment"># macOS，其他操作系统的libc名称可能不同</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>libc.printf(<span class="string">"%d\n"</span>, <span class="number">5</span>)</span><br><span class="line"><span class="number">5</span></span><br><span class="line"><span class="number">2</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>libc.printf(<span class="string">"%f\n"</span>, <span class="number">1.1</span>) <span class="comment"># ctypes.ArgumentError</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>libc.printf(<span class="string">"%f\n"</span>, c_double(<span class="number">1.1</span>))</span><br></pre></td></tr></table></figure><p><code>ctypes</code>可以自动将整数（None, integers, longs）、字符串、unicode字符串转换为C数据类型，比如None转换为NULL，字符串转换为字符指针指向的内存块。但是其他类型如浮点数，就需要显式的包裹在<code>ctypes</code>类型中来将它们转换为C数据类型。</p><p>在函数调用中使用自定义的类型时，<code>ctypes</code>将会查找<code>_as_parameter_</code>属性作为函数参数，同样的，这个属性的类型应该是整数、字符串、unicode字符串。<br></p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="class"><span class="keyword">class</span> <span class="title">cls</span><span class="params">(object)</span>:</span></span><br><span class="line"><span class="meta">... </span>    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, num)</span>:</span></span><br><span class="line"><span class="meta">... </span>            self._as_parameter_ = num</span><br><span class="line">...</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>libc.printf(<span class="string">'%d\n'</span>, cls(<span class="number">9</span>))</span><br><span class="line"><span class="number">9</span></span><br><span class="line"><span class="number">2</span></span><br></pre></td></tr></table></figure><p></p><h2 id="参数类型和返回类型"><a href="#参数类型和返回类型" class="headerlink" title="参数类型和返回类型"></a>参数类型和返回类型</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// test.c</span></span><br><span class="line"><span class="function"><span class="keyword">double</span> <span class="title">divide</span><span class="params">(<span class="keyword">double</span> a, <span class="keyword">int</span> b)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> a / b;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>可以给函数增加一个<code>argtypes</code>属性来指定函数的参数类型，当调用函数时传入的参数与指定参数类型不一致时，会抛出<code>ArgumentError</code>。如果要将自定义类放在<code>argtypes</code>里需要在自定义类中实现<code>from_param()</code>方法。</p><p><code>ctypes</code>调用函数时，默认的返回值是C的int类型，如果是其他返回类型要用<code>restype</code>属性手动指定，比如<code>divide()</code>方法的返回值为<code>double</code>类型，就要给<code>restype</code>赋值一个<code>c_double</code>。如果返回类型是整数，还可以给<code>restype</code>赋值一个callable对象，函数返回值将会作为参数传给callable对象，这种用法在检测函数调用出错时很有用。</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> ctypes <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">num</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">from_param</span><span class="params">(param)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> type(param) == num: <span class="comment"># type check</span></span><br><span class="line">            <span class="keyword">return</span> param <span class="comment"># return object itself</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">raise</span> TypeError(<span class="string">'wrong type'</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, n)</span>:</span></span><br><span class="line">        self._as_parameter_ = n</span><br><span class="line"></span><br><span class="line">divide = CDLL(<span class="string">'libtest.so'</span>).divide</span><br><span class="line">divide.argtypes = [c_double, num] <span class="comment"># list</span></span><br><span class="line">divide.restype = c_double</span><br><span class="line"></span><br><span class="line"><span class="keyword">print</span> divide(<span class="number">0.5</span>, num(<span class="number">2</span>)) <span class="comment"># print: 0.25</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">well_hello</span><span class="params">(val)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> val == <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">print</span> <span class="string">"wonderful hello"</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">print</span> <span class="string">"bad hello"</span></span><br><span class="line"></span><br><span class="line">hello = CDLL(<span class="string">'libtest.so'</span>).hello</span><br><span class="line">hello.restype = well_hello</span><br><span class="line">hello() <span class="comment"># print: Hello, world!wonderful hello</span></span><br></pre></td></tr></table></figure><h2 id="复合类型的使用"><a href="#复合类型的使用" class="headerlink" title="复合类型的使用"></a>复合类型的使用</h2><p>下篇继续</p><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol><li><a href="https://docs.python.org/2/library/ctypes.html" target="_blank" rel="noopener">15.17. ctypes — A foreign function library for Python</a></li></ol></div><div><ul class="post-copyright"><li class="post-copyright-author"> <strong>本文作者：</strong> Dark Flame</li><li class="post-copyright-link"> <strong>本文链接：</strong> <a href="https://lieyanqzu.github.io/blog/2018-09/python-ctypes-1/" title="在Python中使用C/C++——ctypes(1)">https://lieyanqzu.github.io/blog/2018-09/python-ctypes-1/</a></li><li class="post-copyright-license"> <strong>版权声明：</strong> 本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li></ul></div><footer class="post-footer"><div class="post-tags"> <a href="/tags/Python/" rel="tag"># Python</a> <a href="/tags/C-C/" rel="tag"># C/C++</a> <a href="/tags/ctypes/" rel="tag"># ctypes</a></div><div class="post-nav"><div class="post-nav-next post-nav-item"><a href="/blog/2017-11/java-class/" rel="next" title="Java的Class类"><i class="fa fa-chevron-left"></i> Java的Class类</a></div><span class="post-nav-divider"></span><div class="post-nav-prev post-nav-item"></div></div></footer></div></article></div></div><div class="comments" id="comments"></div></div><div class="sidebar-toggle"><div class="sidebar-toggle-line-wrap"><span class="sidebar-toggle-line sidebar-toggle-line-first"></span><span class="sidebar-toggle-line sidebar-toggle-line-middle"></span><span class="sidebar-toggle-line sidebar-toggle-line-last"></span></div></div><aside id="sidebar" class="sidebar"><div class="sidebar-inner"><ul class="sidebar-nav motion-element"><li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap"> 文章目录</li><li class="sidebar-nav-overview" data-target="site-overview-wrap"> 站点概览</li></ul><section class="site-overview-wrap sidebar-panel"><div class="site-overview"><div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person"> <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Dark Flame"><p class="site-author-name" itemprop="name">Dark Flame</p><p class="site-description motion-element" itemprop="description">Note of my programming journey.</p></div><nav class="site-state motion-element"><div class="site-state-item site-state-posts"> <a href="/archives/"><span class="site-state-item-count">2</span> <span class="site-state-item-name">日志</span></a></div><div class="site-state-item site-state-categories"> <a href="/categories/index.html"><span class="site-state-item-count">2</span> <span class="site-state-item-name">分类</span></a></div><div class="site-state-item site-state-tags"> <a href="/tags/index.html"><span class="site-state-item-count">5</span> <span class="site-state-item-name">标签</span></a></div></nav><div class="feed-link motion-element"><a href="/atom.xml" rel="alternate"><i class="fa fa-rss"></i> RSS</a></div><div class="links-of-author motion-element"><span class="links-of-author-item"><a href="https://github.com/lieyanqzu" target="_blank" title="GitHub" rel="external nofollow"><i class="fa fa-fw fa-github"></i> GitHub</a></span><span class="links-of-author-item"><a href="https://stackoverflow.com/users/8268920" target="_blank" title="StackOverflow" rel="external nofollow"><i class="fa fa-fw fa-stack-overflow"></i> StackOverflow</a></span></div></div></section><section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active"><div class="post-toc"><div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ctypes是什么"><span class="nav-number">1.</span> <span class="nav-text">ctypes是什么</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#准备C-C-动态链接库"><span class="nav-number">2.</span> <span class="nav-text">准备C/C++动态链接库</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#extern-quot-C-quot"><span class="nav-number">2.1.</span> <span class="nav-text">extern &quot;C&quot;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cdecl和-stdcall"><span class="nav-number">2.2.</span> <span class="nav-text">__cdecl和__stdcall</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何编译库"><span class="nav-number">2.3.</span> <span class="nav-text">如何编译库</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#开始使用ctypes"><span class="nav-number">3.</span> <span class="nav-text">开始使用ctypes</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基本数据类型"><span class="nav-number">3.1.</span> <span class="nav-text">基本数据类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#函数调用"><span class="nav-number">3.2.</span> <span class="nav-text">函数调用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参数类型和返回类型"><span class="nav-number">3.3.</span> <span class="nav-text">参数类型和返回类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#复合类型的使用"><span class="nav-number">3.4.</span> <span class="nav-text">复合类型的使用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div></div></section></div></aside></div></main><footer id="footer" class="footer"><div class="footer-inner"><div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2018</span><span class="with-love" id="animate"><i class="fa fa-spinner"></i></span> <span class="author" itemprop="copyrightHolder">Dark Flame</span></div><div class="powered-by">Powered by <a class="theme-link" target="_blank" rel="external nofollow" href="https://hexo.io">Hexo</a> v3.7.1</div> <span class="post-meta-divider">|</span><div class="theme-info">Theme – <a class="theme-link" target="_blank" rel="external nofollow" href="https://theme-next.org">NexT.Gemini</a> v6.4.1</div></div></footer><div class="back-to-top"><i class="fa fa-arrow-up"></i> <span id="scrollpercent"><span>0</span>%</span></div></div><script type="text/javascript">"[object Function]"!==Object.prototype.toString.call(window.Promise)&&(window.Promise=null)</script><script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script><script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script><script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script><script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script><script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script><script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script><script type="text/javascript" src="/js/src/utils.js?v=6.4.1"></script><script type="text/javascript" src="/js/src/motion.js?v=6.4.1"></script><script type="text/javascript" src="/js/src/affix.js?v=6.4.1"></script><script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.4.1"></script><script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.1"></script><script type="text/javascript" src="/js/src/post-details.js?v=6.4.1"></script><script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.1"></script><script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script><script src="//unpkg.com/valine/dist/Valine.min.js"></script><script type="text/javascript">var GUEST=["nick","mail","link"],guest="nick,mail,link";guest=guest.split(",").filter(function(e){return-1<GUEST.indexOf(e)}),new Valine({el:"#comments",verify:!1,notify:!1,appId:"xbsi0iOWYNlPxLIS6qeStOk6-gzGzoHsz",appKey:"RahUW8rsjURriaLGlQ5Dbe1V",placeholder:"在这说点什么...",avatar:"mm",meta:guest,pageSize:"10",visitor:!0})</script><script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script><script>!function(){var t=document.createElement("script"),e=window.location.protocol.split(":")[0];t.src="https"===e?"https://zz.bdstatic.com/linksubmit/push.js":"http://push.zhanzhang.baidu.com/push.js";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}()</script><script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      },
+      TeX: {equationNumbers: { autoNumber: "AMS" }}
+    });
+</script><script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script><script type="text/javascript" src="//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script src="/lib/pangu/dist/pangu.min.js?v=3.3"></script><script type="text/javascript">pangu.spacingPage()</script><style>.copy-btn{display:inline-block;padding:6px 12px;font-size:13px;font-weight:700;line-height:20px;color:#333;white-space:nowrap;vertical-align:middle;cursor:pointer;background-color:#eee;background-image:linear-gradient(#fcfcfc,#eee);border:1px solid #d5d5d5;border-radius:3px;user-select:none;outline:0}.highlight-wrap .copy-btn{transition:opacity .3s ease-in-out;opacity:0;padding:2px 6px;position:absolute;right:4px;top:8px}.highlight-wrap .copy-btn:focus,.highlight-wrap:hover .copy-btn{opacity:1}.highlight-wrap{position:relative}</style><script>$(".highlight").each(function(t,e){var n=$("<div>").addClass("highlight-wrap");$(e).after(n),n.append($("<button>").addClass("copy-btn").append("复制").on("click",function(t){var e=$(this).parent().find(".code").find(".line").map(function(t,e){return $(e).text()}).toArray().join("\n"),n=document.createElement("textarea");document.body.appendChild(n),n.style.position="absolute",n.style.top="0px",n.style.left="0px",n.value=e,n.select(),n.focus();var o=document.execCommand("copy");document.body.removeChild(n),o?$(this).text("复制成功"):$(this).text("复制失败"),$(this).blur()})).on("mouseleave",function(t){var e=$(this).find(".copy-btn");setTimeout(function(){e.text("复制")},300)}).append(e)})</script></body></html>
